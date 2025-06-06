@@ -1,3 +1,13 @@
+# %% [markdown]
+# ## MovieLens Recommendation System
+
+# %% [markdown]
+# Notebook ini berisi tahapan lengkap pembuatan sistem rekomendasi film berbasis MovieLens, mulai dari pemahaman data, eksplorasi, persiapan data, pemodelan, hingga evaluasi. Setiap tahapan dijelaskan secara singkat untuk memudahkan pemahaman proses dan hasil yang diperoleh.
+
+# %% [markdown]
+# ## Import Library
+# Import semua library yang dibutuhkan untuk semua proses yang akan dijalankan.
+
 # %%
 # Import library yang diperlukan
 import pandas as pd
@@ -15,6 +25,7 @@ plt.rcParams['figure.figsize'] = (10, 6)
 
 # %% [markdown]
 # ## Load Datasets
+# Pada bagian ini dilakukan proses load seluruh dataset yang akan digunakan, yaitu movies, ratings, tags, dan links. Data ini akan menjadi dasar untuk analisis dan pemodelan sistem rekomendasi.
 
 # %%
 # Load semua dataset
@@ -25,6 +36,7 @@ links_df = pd.read_csv('datasets/links.csv')
 
 # %% [markdown]
 # ## Data Understanding
+# Bagian ini bertujuan untuk memahami struktur, isi, dan kualitas data. Ditampilkan beberapa baris awal dari setiap dataset untuk melihat format dan contoh data, serta dilakukan pengecekan ukuran dan missing value pada masing-masing dataset.
 
 # %%
 # Tampilkan 5 baris pertama untuk masing-masing
@@ -39,6 +51,7 @@ print(links_df.head())
 
 # %% [markdown]
 # ### Ukuran dan missing value
+# Bagian ini bertujuan untuk memeriksa ukuran (jumlah baris/kolom) dan keberadaan missing value pada setiap dataset. Hal ini penting untuk memastikan data yang digunakan sudah bersih dan siap untuk proses analisis dan pemodelan.
 
 # %%
 # Cek informasi dataset dan missing value
@@ -57,9 +70,11 @@ print(links_df.info())
 
 # %% [markdown]
 # ## Exploratory Data Analysis (EDA)
+# Analisis awal dilakukan untuk memahami pola dan distribusi data rating. Pada tahap ini, dilakukan visualisasi distribusi jumlah rating per user dan per film, serta ringkasan statistiknya untuk melihat sebaran aktivitas user dan popularitas film.
 
 # %% [markdown]
 # ### Memeriksa Jumlah Rating
+# Pada tahap ini dilakukan analisis jumlah rating yang diberikan oleh setiap user dan jumlah rating yang diterima oleh setiap film. Visualisasi distribusi ini membantu memahami pola aktivitas user dan popularitas film dalam dataset. Selain itu, ringkasan statistik juga ditampilkan untuk memberikan gambaran sebaran jumlah rating.
 
 # %%
 ratings = pd.read_csv("datasets/ratings.csv")
@@ -95,6 +110,7 @@ print(ratings_per_movie.describe())
 
 # %% [markdown]
 # ### Distribusi Rating
+# Visualisasi distribusi nilai rating yang diberikan oleh user. Diperlihatkan juga jumlah masing-masing rating (1-5) untuk mengetahui kecenderungan user dalam memberikan penilaian.
 
 # %%
 # Plot distribusi rating
@@ -111,6 +127,7 @@ for rating in range(1, 6):
 
 # %% [markdown]
 # ### Film dengan Rating Terbanyak
+# Analisis film dengan rating terbanyak untuk mengetahui film-film yang paling populer di dataset. Ditampilkan 10 film teratas beserta jumlah rating yang diterima.
 
 # %%
 # Hitung jumlah rating per film
@@ -131,7 +148,12 @@ print("10 Film dengan Rating Terbanyak:")
 print(top_films[['title', 'Jumlah Rating']].to_string(index=False))
 
 # %% [markdown]
-# ## Data Preparation (Content-Based Filtering)
+# ## Data Preparation
+# Bagian ini berisi tahapan persiapan data sebelum pemodelan. Data diproses agar sesuai dengan kebutuhan masing-masing pendekatan (content-based dan collaborative filtering).
+
+# %% [markdown]
+# ### Untuk Content-Based Filtering
+# Persiapan data untuk content-based filtering dimulai dengan membersihkan kolom genres pada dataset film agar dapat diproses lebih lanjut.
 
 # %%
 # Load data film
@@ -142,7 +164,8 @@ print(movies.head())
 
 
 # %% [markdown]
-# ### Bersihkan kolom genres
+# #### Bersihkan kolom genres
+# Pada tahap ini kolom genres dibersihkan agar dapat diproses oleh TF-IDF 
 
 # %%
 # Ganti '|' menjadi spasi agar bisa diproses oleh TF-IDF
@@ -150,7 +173,8 @@ movies['genres_clean'] = movies['genres'].str.replace('|', ' ', regex=False)
 
 
 # %% [markdown]
-# ### TF-IDF Vectorization
+# #### TF-IDF Vectorization
+# Pada tahap ini, dilakukan ekstraksi fitur genre menggunakan TF-IDF Vectorizer. Setiap film direpresentasikan sebagai vektor numerik berdasarkan genre-nya, yang akan digunakan untuk menghitung kemiripan antar film.
 
 # %%
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -167,7 +191,8 @@ print("TF-IDF Matrix shape:", tfidf_matrix.shape)
 
 
 # %% [markdown]
-# ### Menyimpan Data yang Dibutuhkan
+# #### Menyimpan Data yang Dibutuhkan
+# Data penting seperti movieId dan title disimpan untuk keperluan interpretasi hasil rekomendasi pada tahap selanjutnya.
 
 # %%
 # Simpan dataframe untuk kebutuhan model nanti
@@ -176,7 +201,8 @@ movie_titles = movies['title']
 
 
 # %% [markdown]
-# ## Data Preparation (Collaborative Filtering)
+# ### Untuk Collaborative Filtering
+# Persiapan data untuk collaborative filtering, yaitu membaca data rating dan menampilkan beberapa baris awal untuk memastikan data sudah benar.
 
 # %%
 ratings = pd.read_csv('datasets/ratings.csv')
@@ -186,7 +212,8 @@ print(ratings.head())
 
 
 # %% [markdown]
-# ### Buat user-item matrix
+# #### Buat user-item matrix
+# Membentuk user-item matrix, yaitu matriks dengan baris sebagai userId dan kolom sebagai movieId. Matriks ini akan digunakan untuk collaborative filtering.
 
 # %%
 # Buat matriks pengguna x film (nilai = rating)
@@ -197,6 +224,9 @@ print("User-Item Matrix shape:", user_item_matrix.shape)
 user_item_matrix.head()
 
 
+# %% [markdown]
+# Nilai kosong (NaN) pada user-item matrix diisi dengan 0 agar dapat digunakan untuk perhitungan kemiripan dan prediksi rating.
+
 # %%
 # Ganti NaN dengan 0
 user_item_matrix_filled = user_item_matrix.fillna(0)
@@ -204,9 +234,11 @@ user_item_matrix_filled = user_item_matrix.fillna(0)
 
 # %% [markdown]
 # ## Modeling - Content-Based Filtering
+# Pada bagian ini dilakukan pemodelan sistem rekomendasi berbasis konten (Content-Based Filtering). Model ini menggunakan kemiripan antar film berdasarkan genre yang telah direpresentasikan dalam bentuk vektor fitur.
 
 # %% [markdown]
-# ### Hitung Cosine Similarity antar film
+# ### Hitung Cosine Similarity antar Film
+# Fungsi berikut digunakan untuk mengambil daftar film yang paling mirip dengan film yang dipilih, berdasarkan nilai similarity tertinggi. Fungsi ini akan digunakan untuk menghasilkan rekomendasi film.
 
 # %%
 from sklearn.metrics.pairwise import linear_kernel
@@ -220,6 +252,7 @@ indices = pd.Series(movies.index, index=movies['title']).drop_duplicates()
 
 # %% [markdown]
 # ### Fungsi untuk mendapatkan rekomendasi
+# Fungsi berikut digunakan untuk mengambil daftar film yang paling mirip dengan film yang dipilih, berdasarkan nilai similarity tertinggi. Fungsi ini akan digunakan untuk menghasilkan rekomendasi film.
 
 # %%
 def get_recommendations(title, cosine_sim=cosine_sim, num_recommendations=10):
@@ -242,6 +275,7 @@ def get_recommendations(title, cosine_sim=cosine_sim, num_recommendations=10):
 
 # %% [markdown]
 # ### Hasil penggunaan — Rekomendasi untuk satu film
+# Contoh penggunaan fungsi rekomendasi untuk mencari film yang mirip dengan "Toy Story (1995)". Hasil rekomendasi ditampilkan dalam bentuk tabel.
 
 # %%
 # Contoh: Rekomendasikan film mirip dengan "Toy Story (1995)"
@@ -260,9 +294,11 @@ display(recommended_df)
 
 # %% [markdown]
 # ## Modeling - Collaborative Filtering (Item-based)
+# Pada bagian ini dilakukan pemodelan collaborative filtering (item-based), yaitu sistem rekomendasi yang memanfaatkan pola rating pengguna terhadap film untuk mencari kemiripan antar item (film).
 
 # %% [markdown]
 # ###  Membuat matrix user-item rating
+# Membentuk kembali user-item matrix khusus untuk collaborative filtering, dengan userId sebagai baris, movieId sebagai kolom dan rating sebagai nilai.
 
 # %%
 # Membuat pivot table userId sebagai baris, movieId sebagai kolom, dan rating sebagai nilai
@@ -271,6 +307,7 @@ user_movie_ratings = ratings.pivot(index='userId', columns='movieId', values='ra
 
 # %% [markdown]
 # ### Hitung kemiripan antar item (movie)
+# Cosine similarity digunakan untuk menghitung tingkat kemiripan antar film berdasarkan pola rating dari seluruh user. Matriks kemiripan ini akan digunakan untuk proses rekomendasi item-based.
 
 # %%
 from sklearn.metrics.pairwise import cosine_similarity
@@ -282,6 +319,7 @@ item_similarity_df = pd.DataFrame(item_similarity, index=user_movie_ratings.colu
 
 # %% [markdown]
 # ### Fungsi rekomendasi item-based CF
+# Fungsi berikut digunakan untuk menghasilkan rekomendasi film berdasarkan kemiripan item (item-based collaborative filtering). Fungsi ini mencari film yang paling mirip dengan film yang sudah diberi rating tinggi oleh user.
 
 # %%
 def get_item_based_recommendations(movie_id, user_rating=5, top_n=10):
@@ -305,7 +343,8 @@ def get_item_based_recommendations(movie_id, user_rating=5, top_n=10):
 
 
 # %% [markdown]
-# ### Hasil penggunaan
+# ### Hasil Penggunaan
+# Contoh penggunaan fungsi rekomendasi item-based collaborative filtering untuk mencari film yang mirip dengan "Toy Story (1995)" berdasarkan pola rating user lain.
 
 # %%
 # Misal user memberi rating 5 untuk film dengan movieId 1 (Toy Story)
@@ -319,7 +358,15 @@ for i, title in enumerate(recommended_items.values, 1):
 
 
 # %% [markdown]
-# ## Evaluation Content-Based Filtering (Precision)
+# ## Evaluation
+
+# %% [markdown]
+# ### Content-Based Filtering (Precision)
+# Evaluasi sistem rekomendasi content-based filtering menggunakan metrik precision. Precision mengukur seberapa banyak film yang direkomendasikan benar-benar relevan bagi user.
+
+# %% [markdown]
+# #### Evaluasi Precision untuk Satu User
+# Contoh perhitungan precision untuk satu user, yaitu membandingkan hasil rekomendasi dengan daftar film yang pernah diberi rating tinggi oleh user tersebut.
 
 # %%
 # Contoh evaluasi precision untuk satu user
@@ -338,6 +385,10 @@ if not user_rated_titles.empty:
     print(f"Precision untuk user {user_id} dengan query '{test_title}': {precision:.2f}")
 else:
     print("User tidak memiliki film dengan rating tinggi untuk evaluasi.")
+
+# %% [markdown]
+# #### Evaluasi Precision untuk Beberapa User
+# Perhitungan precision untuk beberapa user sekaligus, untuk melihat seberapa baik sistem dalam merekomendasikan film yang relevan pada berbagai user.
 
 # %%
 # Daftar userId yang ingin dievaluasi
@@ -369,7 +420,8 @@ precision_df = pd.DataFrame(precision_results)
 print(precision_df)
 
 # %% [markdown]
-# ### Visualisasi Precision Beberapa User
+# #### Visualisasi Precision Beberapa User
+# Visualisasi hasil precision beberapa user dalam bentuk bar chart untuk memudahkan interpretasi performa sistem rekomendasi content-based filtering.
 
 # %%
 # Filter hanya user yang memiliki nilai precision (bukan None)
@@ -385,17 +437,20 @@ plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.show()
 
 # %% [markdown]
-# ## Evaluasi Collaborative Filtering (RMSE)
+# ### Collaborative Filtering (RMSE)
+# Evaluasi collaborative filtering dilakukan menggunakan metrik RMSE (Root Mean Squared Error) untuk mengukur seberapa dekat prediksi rating terhadap rating aktual user.
 
 # %% [markdown]
-# ### Split Data
+# #### Split Data
+# Data rating dibagi menjadi data latih (train) dan data uji (test) untuk keperluan evaluasi model collaborative filtering.
 
 # %%
 # Split data menjadi train dan test (misal, 80% train, 20% test)
 train, test = train_test_split(ratings_df, test_size=0.2, random_state=42)
 
 # %% [markdown]
-# ### Train
+# #### Train
+# Pada tahap ini, model collaborative filtering dilatih menggunakan data train. Matriks kemiripan antar item dihitung dari data latih, dan fungsi prediksi rating didefinisikan.
 
 # %%
 # Buat user-item matrix dari data train
@@ -424,7 +479,8 @@ def predict_rating(user_id, movie_id, user_movie_matrix, similarity_matrix):
     return np.dot(sim_scores, user_ratings) / sim_scores.sum()
 
 # %% [markdown]
-# ### Test
+# #### Test
+# Prediksi rating dilakukan pada data test, kemudian dihitung nilai RMSE untuk mengukur akurasi model collaborative filtering secara keseluruhan.
 
 # %%
 # Prediksi rating untuk data test
@@ -442,6 +498,11 @@ if y_true:
     print(f"RMSE Collaborative Filtering (item-based): {rmse:.2f}")
 else:
     print("Tidak ada prediksi yang dapat dihitung untuk RMSE.")
+
+# %% [markdown]
+# #### Evaluasi RMSE per User
+# Pada bagian ini dilakukan evaluasi performa model collaborative filtering secara individual untuk beberapa user. RMSE dihitung untuk setiap user berdasarkan prediksi dan rating aktual pada data uji, sehingga dapat diketahui variasi akurasi model pada masing-masing user.
+# 
 
 # %%
 # Ambil userId unik dari data test
@@ -466,6 +527,10 @@ for user_id in user_ids_test[:10]:  # ambil 10 user pertama (atau ganti sesuai k
 
 user_rmse_df = pd.DataFrame(user_rmse_results)
 print(user_rmse_df)
+
+# %% [markdown]
+# #### Visualisasi RMSE per User
+# Perhitungan dan visualisasi RMSE untuk beberapa user secara individual, untuk melihat variasi performa model pada masing-masing user. Visualisasi ini membantu mengidentifikasi user yang prediksinya paling akurat maupun yang masih perlu perbaikan.
 
 # %%
 # Visualisasi RMSE per user

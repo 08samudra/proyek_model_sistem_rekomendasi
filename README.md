@@ -234,8 +234,7 @@ Pada tahap modeling, dua pendekatan utama digunakan untuk membangun sistem rekom
 #### 1. Content-Based Filtering
 Pendekatan ini merekomendasikan film kepada pengguna berdasarkan kemiripan konten film, khususnya genre. Proses modeling yang dilakukan:
 
-- **Ekstraksi Fitur Genre**: Genre film diolah menggunakan TF-IDF Vectorizer untuk menghasilkan representasi numerik (vektor fitur) dari setiap film berdasarkan genre-nya.
-- **Perhitungan Similarity**: Menggunakan cosine similarity untuk mengukur tingkat kemiripan antar film berdasarkan vektor genre. Semakin tinggi nilai similarity, semakin mirip kedua film tersebut.
+- **Perhitungan Similarity**: Menggunakan cosine similarity untuk mengukur tingkat kemiripan antar film berdasarkan vektor fitur genre yang telah diproses pada tahap data preparation. Semakin tinggi nilai similarity, semakin mirip kedua film tersebut.
 - **Rekomendasi Top-N**: Untuk setiap pengguna, sistem mencari film yang paling mirip dengan film-film yang pernah diberi rating tinggi oleh pengguna tersebut, lalu merekomendasikan Top-N film yang belum pernah ditonton.
 
 Output dari model ini berupa daftar rekomendasi film untuk setiap user, beserta nilai similarity-nya.
@@ -403,4 +402,4 @@ Berdasarkan hasil eksplorasi data, pembangunan model, dan evaluasi performa, pro
 
 4. Secara keseluruhan, kedua pendekatan memiliki keunggulan masing-masing, dan akan lebih efektif jika digabungkan dalam bentuk sistem rekomendasi hybrid untuk memberikan hasil yang lebih akurat dan personal.
 
-Melalui proyek ini, sistem rekomendasi yang dibangun mampu memberikan kontribusi nyata dalam membantu pengguna menemukan film yang sesuai dengan preferensinya, sekaligus memberikan insight berharga bagi pengelola platform dalam memahami pola konsumsi dan preferensi pengguna. Ke depan, sistem dapat dikembangkan lebih lanjut dengan memasukkan fitur tambahan seperti tag, metadata dari IMDb atau TMDb, serta penggunaan model deep learning untuk meningkatkan akurasi dan fleksibilitas sistem rekomendasi. 
+Melalui proyek ini, sistem rekomendasi yang dibangun mampu memberikan kontribusi nyata dalam membantu pengguna menemukan film yang sesuai dengan preferensinya, sekaligus memberikan insight berharga bagi pengelola platform dalam memahami pola konsumsi dan preferensi pengguna. Ke depan, sistem dapat dikembangkan lebih lanjut dengan memasukkan fitur tambahan seperti tag, metadata dari IMDb atau TMDb, serta penggunaan model deep learning untuk meningkatkan akurasi dan fleksibilitas sistem rekomendasi.
