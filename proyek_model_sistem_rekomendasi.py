@@ -233,11 +233,15 @@ user_item_matrix_filled = user_item_matrix.fillna(0)
 
 
 # %% [markdown]
-# ## Modeling - Content-Based Filtering
+# ## Modeling
+# Pada tahap modeling, dua pendekatan utama digunakan untuk membangun sistem rekomendasi, yaitu Content-Based Filtering dan Collaborative Filtering.
+
+# %% [markdown]
+# ### Content-Based Filtering
 # Pada bagian ini dilakukan pemodelan sistem rekomendasi berbasis konten (Content-Based Filtering). Model ini menggunakan kemiripan antar film berdasarkan genre yang telah direpresentasikan dalam bentuk vektor fitur.
 
 # %% [markdown]
-# ### Hitung Cosine Similarity antar Film
+# #### Hitung Cosine Similarity antar Film
 # Fungsi berikut digunakan untuk mengambil daftar film yang paling mirip dengan film yang dipilih, berdasarkan nilai similarity tertinggi. Fungsi ini akan digunakan untuk menghasilkan rekomendasi film.
 
 # %%
@@ -251,7 +255,7 @@ indices = pd.Series(movies.index, index=movies['title']).drop_duplicates()
 
 
 # %% [markdown]
-# ### Fungsi untuk mendapatkan rekomendasi
+# #### Fungsi untuk mendapatkan rekomendasi
 # Fungsi berikut digunakan untuk mengambil daftar film yang paling mirip dengan film yang dipilih, berdasarkan nilai similarity tertinggi. Fungsi ini akan digunakan untuk menghasilkan rekomendasi film.
 
 # %%
@@ -274,7 +278,7 @@ def get_recommendations(title, cosine_sim=cosine_sim, num_recommendations=10):
 
 
 # %% [markdown]
-# ### Hasil penggunaan — Rekomendasi untuk satu film
+# #### Hasil penggunaan — Rekomendasi untuk satu film
 # Contoh penggunaan fungsi rekomendasi untuk mencari film yang mirip dengan "Toy Story (1995)". Hasil rekomendasi ditampilkan dalam bentuk tabel.
 
 # %%
@@ -293,11 +297,11 @@ print("\nTabel Rekomendasi Film:")
 display(recommended_df)
 
 # %% [markdown]
-# ## Modeling - Collaborative Filtering (Item-based)
+# ### Collaborative Filtering (Item-based)
 # Pada bagian ini dilakukan pemodelan collaborative filtering (item-based), yaitu sistem rekomendasi yang memanfaatkan pola rating pengguna terhadap film untuk mencari kemiripan antar item (film).
 
 # %% [markdown]
-# ###  Membuat matrix user-item rating
+# ####  Membuat matrix user-item rating
 # Membentuk kembali user-item matrix khusus untuk collaborative filtering, dengan userId sebagai baris, movieId sebagai kolom dan rating sebagai nilai.
 
 # %%
@@ -306,7 +310,7 @@ user_movie_ratings = ratings.pivot(index='userId', columns='movieId', values='ra
 
 
 # %% [markdown]
-# ### Hitung kemiripan antar item (movie)
+# #### Hitung kemiripan antar item (movie)
 # Cosine similarity digunakan untuk menghitung tingkat kemiripan antar film berdasarkan pola rating dari seluruh user. Matriks kemiripan ini akan digunakan untuk proses rekomendasi item-based.
 
 # %%
@@ -318,7 +322,7 @@ item_similarity_df = pd.DataFrame(item_similarity, index=user_movie_ratings.colu
 
 
 # %% [markdown]
-# ### Fungsi rekomendasi item-based CF
+# #### Fungsi rekomendasi item-based CF
 # Fungsi berikut digunakan untuk menghasilkan rekomendasi film berdasarkan kemiripan item (item-based collaborative filtering). Fungsi ini mencari film yang paling mirip dengan film yang sudah diberi rating tinggi oleh user.
 
 # %%
@@ -343,7 +347,7 @@ def get_item_based_recommendations(movie_id, user_rating=5, top_n=10):
 
 
 # %% [markdown]
-# ### Hasil Penggunaan
+# #### Hasil Penggunaan
 # Contoh penggunaan fungsi rekomendasi item-based collaborative filtering untuk mencari film yang mirip dengan "Toy Story (1995)" berdasarkan pola rating user lain.
 
 # %%

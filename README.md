@@ -200,7 +200,11 @@ Berikut adalah 10 film dengan jumlah rating terbanyak:
 
 Insight dari EDA ini menunjukkan adanya ketimpangan distribusi rating baik pada user maupun film, serta kecenderungan user memberikan rating tinggi (4 dan 5). Film-film populer cenderung mendapat rating jauh lebih banyak dibanding film lain.
 
-## Data Preparation (Content-Based Filtering)
+## Data Preparation
+
+Pada bagian ini berisi tahapan persiapan data sebelum pemodelan. Data diproses agar sesuai dengan kebutuhan masing-masing pendekatan (content-based dan collaborative filtering).
+
+### Untuk Content-Based Filtering
 
 Pada tahap ini, data film dipersiapkan untuk membangun model content-based filtering. Langkah-langkah utama yang dilakukan:
 
@@ -214,7 +218,7 @@ Pada tahap ini, data film dipersiapkan untuk membangun model content-based filte
 3. **Penyimpanan Data yang Dibutuhkan**
    - Menyimpan daftar movieId dan title untuk keperluan rekomendasi dan interpretasi hasil model.
 
-## Data Preparation (Collaborative Filtering)
+## Untuk Collaborative Filtering
 
 Untuk collaborative filtering, data rating pengguna terhadap film diproses menjadi bentuk matriks user-item. Tahapan yang dilakukan:
 
