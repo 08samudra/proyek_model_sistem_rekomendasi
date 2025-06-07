@@ -218,7 +218,7 @@ Pada tahap ini, data film dipersiapkan untuk membangun model content-based filte
 3. **Penyimpanan Data yang Dibutuhkan**
    - Menyimpan daftar movieId dan title untuk keperluan rekomendasi dan interpretasi hasil model.
 
-## Untuk Collaborative Filtering
+### Untuk Collaborative Filtering
 
 Untuk collaborative filtering, data rating pengguna terhadap film diproses menjadi bentuk matriks user-item. Tahapan yang dilakukan:
 
@@ -228,6 +228,10 @@ Untuk collaborative filtering, data rating pengguna terhadap film diproses menja
 2. **Membuat User-Item Matrix**
    - Membentuk matriks dengan baris sebagai userId dan kolom sebagai movieId, serta nilai matriks adalah rating yang diberikan user ke film tersebut.
    - Nilai NaN (film yang belum dirating user) diisi dengan 0 agar matriks dapat digunakan untuk perhitungan kemiripan dan prediksi rating.
+
+3. **Split Data**
+   - Sebelum melakukan pemodelan collaborative filtering, data rating dibagi menjadi dua bagian, yaitu data latih (train) dan data uji (test). Pembagian dilakukan secara acak dengan proporsi 80% data sebagai data train dan 20% sebagai data test.
+   - Data train digunakan untuk membangun model, sedangkan data test untuk mengukur akurasi prediksi model secara objektif dan mencegah overfitting.
 
 Data yang sudah dipersiapkan ini akan digunakan pada tahap modeling baik untuk pendekatan content-based maupun collaborative filtering.
 
